@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FastVid Downloader - YouTube Facebook TikTok Downloader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #020617, #0f172a, #111827);
+      color: white;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      padding: 45px 18px 20px;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .logo span { color: #38bdf8; }
+
+    h1 {
+      font-size: 34px;
+      margin: 10px 0;
+      line-height: 1.2;
+    }
+
+    .sub {
+      color: #cbd5e1;
+      max-width: 700px;
+      margin: auto;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .wrap {
+      max-width: 780px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .card {
+      background: white;
+      color: #0f172a;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+    }
+
+    .platforms {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 16px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+    }
+
+    #result {
+      margin-top: 22px;
+    }
+
+    .error {
+      background: #fef2f2;
+      color: #991b1b;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #fecaca;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .video-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .thumb {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      background: #111827;
+    }
+
+    .video-content {
+      padding: 18px;
+    }
+
+    .video-title {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .download-link {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      background: #16a34a;
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 900;
+      margin-top: 10px;
+    }
+
+    .notice {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.08);
+      color: #cbd5e1;
+      padding: 18px;
+      border-radius: 18px;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 15px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="logo">FastVid <span>Downloader</span></div>
+    <h1>YouTube, Facebook & TikTok Downloader</h1>
+    <p class="sub">
+      Paste a public video link and generate download options instantly.
+      Use only for videos you own or have permission to download.
+    </p>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="platforms">
+        <div class="pill">YouTube</div>
+        <div class="pill">Facebook</div>
+        <div class="pill">TikTok</div>
+      </div>
+
+      <input id="videoUrl" type="url" placeholder="Paste YouTube, Facebook or TikTok video link...">
+      <button id="btn" onclick="getVideo()">Get Download Link</button>
+
+      <div id="result"></div>
+    </section>
+
+    <div class="notice">
+      <strong>Important:</strong> This tool is for public videos that you own or have permission to download.
+      It does not support private videos, login-required content, DRM-protected content, or copyright bypass.
+    </div>
+  </main>
+
+  <footer>
+    © 2026 FastVid Downloader. All Rights Reserved.
+  </footer>
+
+<script>
+  const input = document.getElementById("videoUrl");
+  const result = document.getElementById("result");
+  const btn = document.getElementById("btn");
+
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") getVideo();
+  });
+
+  function showError(msg) {
+    result.innerHTML = `<div class="error">${msg}</div>`;
+  }
+
+  function setLoading(state) {
+    btn.disabled = state;
+    btn.innerText = state ? "Processing..." : "Get Download Link";
+  }
+
+  function formatDuration(seconds) {
+    if (!seconds) return "";
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  async function getVideo() {
+    const url = input.value.trim();
+    result.innerHTML = "";
+
+    if (!url) {
+      showError("Please paste a video URL.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/info", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url })
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        showError(data.message || "Could not process this video.");
+        return;
+      }
+
+      let buttons = "";
+
+      if (data.formats && data.formats.length) {
+        data.formats.forEach(f => {
+          buttons += `
+            <a class="download-link" target="_blank" rel="noopener"
+               href="/api/download?url=${encodeURIComponent(url)}&format_id=${encodeURIComponent(f.format_id)}">
+              Download ${f.label}
+            </a>
+          `;
+        });
+      } else {
+        buttons = `<div class="error">No downloadable format found.</div>`;
+      }
+
+      result.innerHTML = `
+        <div class="video-box">
+          ${data.thumbnail ? `<img class="thumb" src="${data.thumbnail}" alt="Video thumbnail">` : ""}
+          <div class="video-content">
+            <div class="video-title">${data.title || "Video"}</div>
+            <div class="meta">
+              Platform: ${data.platform || "Social"} 
+              ${data.duration ? " • Duration: " + formatDuration(data.duration) : ""}
+            </div>
+            ${buttons}
+          </div>
+        </div>
+      `;
+
+    } catch (err) {
+      showError("Server error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  }
+</script>
+
+</body>
+</html>
