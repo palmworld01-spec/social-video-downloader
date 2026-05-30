@@ -169,6 +169,9 @@ def home():
 
 @app.route("/api/health")
 def health():
+@app.route("/ads.txt")
+def ads_txt():
+    return "google.com, pub-8236790641060877, DIRECT, f08c47fec0942fa0", 200, {"Content-Type": "text/plain"}
     return jsonify({
         "success": True,
         "app": "FastVid Social Downloader",
